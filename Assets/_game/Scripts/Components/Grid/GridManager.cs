@@ -133,6 +133,19 @@ namespace _game.Scripts.Components.Grid
             _currentGrid = null;
         }
 
+        [Button]
+        public bool IsDeadlock()
+        {
+            foreach (var gridCell in _currentGrid.Values)
+            {
+                var gridObject = gridCell.GetGridObject();
+                if (gridObject == null) continue;
+                if (gridObject.IsBlastable()) return false;
+            }
+
+            return true;
+        }
+
         public Dictionary<string, GridCell>.ValueCollection GetAllCells()
         {
             return _currentGrid.Values;
@@ -141,6 +154,16 @@ namespace _game.Scripts.Components.Grid
         public int GetBlastableGroupCount()
         {
             return _gridConfig.BlastableGroupCount;
+        }
+
+        public void CheckAndHandleDeadlock()
+        {
+            //TODO What to do if the deadlock not broken?
+            var isDeadlock = IsDeadlock();
+            if (isDeadlock)
+            {
+                Shuffle();
+            }
         }
     }
 }

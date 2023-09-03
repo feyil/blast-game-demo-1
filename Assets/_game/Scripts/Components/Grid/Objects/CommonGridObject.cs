@@ -11,6 +11,7 @@ namespace _game.Scripts.Components.Grid.Objects
 
         protected GridCell _gridCell;
         private Tween _moveTween;
+        private IGridObject _gridObjectImplementation;
 
         protected CommonGridObject(GridManager gridManager, GridCell gridCell, GameObject viewPrefab, int offset)
         {
@@ -23,9 +24,11 @@ namespace _game.Scripts.Components.Grid.Objects
             _view.GetComponent<RectTransform>().sizeDelta = gridCell.GetSize();
         }
 
+        
         public abstract IItemData GetData();
 
         public abstract void OnInteract();
+        public abstract bool IsBlastable();
 
         public void UpdateCell(GridCell gridCell)
         {

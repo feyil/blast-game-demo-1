@@ -60,6 +60,7 @@ namespace _game.Scripts.Components.Grid
             if (_gridObject != null)
             {
                 _gridObject.OnInteract();
+                _gridManager.CheckAndHandleDeadlock();
             }
         }
 

@@ -27,14 +27,28 @@ namespace _game.Scripts.Components.Grid.Objects
             return _data;
         }
 
-        public override void OnInteract()
+        public override bool IsBlastable()
+        {
+            var set = GetGroupSet();
+            return set != null;
+        }
+
+        private HashSet<BoxGridObject> GetGroupSet()
         {
             var affectedGridObjectSet = new HashSet<BoxGridObject>();
             CheckNeighbouringCells(affectedGridObjectSet);
 
             affectedGridObjectSet.Add(this);
-            if (affectedGridObjectSet.Count < _gridManager.GetBlastableGroupCount()) return;
+            if (affectedGridObjectSet.Count < _gridManager.GetBlastableGroupCount()) return null;
 
+            return affectedGridObjectSet;
+        }
+
+        public override void OnInteract()
+        {
+            var affectedGridObjectSet = GetGroupSet();
+            if (affectedGridObjectSet == null) return;
+            
             foreach (var affectedGridObject in affectedGridObjectSet)
             {
                 affectedGridObject.Destroy();
