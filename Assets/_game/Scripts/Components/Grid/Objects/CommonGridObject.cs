@@ -1,8 +1,5 @@
 using _game.Scripts.Components.Grid.Objects.Data;
-using _game.Scripts.Core;
 using DG.Tweening;
-using DG.Tweening.Core;
-using DG.Tweening.Plugins.Options;
 using UnityEngine;
 
 namespace _game.Scripts.Components.Grid.Objects
@@ -13,12 +10,10 @@ namespace _game.Scripts.Components.Grid.Objects
         protected readonly GameObject _view;
 
         protected GridCell _gridCell;
-        private bool _isDestroyed;
         private Tween _moveTween;
 
         protected CommonGridObject(GridManager gridManager, GridCell gridCell, GameObject viewPrefab, int offset)
         {
-            _isDestroyed = false;
             _gridManager = gridManager;
             _gridCell = gridCell;
 
@@ -32,12 +27,7 @@ namespace _game.Scripts.Components.Grid.Objects
         }
 
         public abstract IItemData GetData();
-
-        public bool IsDestroyed()
-        {
-            return _isDestroyed;
-        }
-
+        
         public abstract bool CanMerge(IGridObject gridObject);
         public abstract bool Merge(IGridObject gridObject);
 
@@ -57,9 +47,7 @@ namespace _game.Scripts.Components.Grid.Objects
 
         public virtual void Destroy()
         {
-            _isDestroyed = true;
             _gridCell.SetGridObject(null);
-            
             Object.Destroy(_view);
         }
     }

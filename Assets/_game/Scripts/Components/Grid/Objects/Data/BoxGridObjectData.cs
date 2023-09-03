@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 namespace _game.Scripts.Components.Grid.Objects.Data
 {
     [Serializable]
-    public class ApplianceGridObjectData : IItemData
+    public class BoxGridObjectData : IItemData
     {
         public static int MIN_VALUE = 2;
         public static int MAX_VALUE = 8;
@@ -14,9 +14,9 @@ namespace _game.Scripts.Components.Grid.Objects.Data
         public int Number;
         public Color Color = new(1, 0.504717f, 0.504717f);
 
-        public static ApplianceGridObjectData GetRandomData()
+        public static BoxGridObjectData GetRandomData()
         {
-            var data = new ApplianceGridObjectData()
+            var data = new BoxGridObjectData()
             {
                 Number = (int)Mathf.Pow(MIN_VALUE, Random.Range(1, (int)Mathf.Log(MAX_VALUE, 2) + 1)),
             };

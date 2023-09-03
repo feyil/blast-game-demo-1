@@ -4,13 +4,14 @@ using _game.Scripts.Components.Grid.Objects.Data;
 using _game.Scripts.Components.Grid.Objects.View;
 using _game.Scripts.Utility;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _game.Scripts.Components.Grid.Objects
 {
     public class GridObjectSpawner : MonoSingleton<GridObjectSpawner>
     {
-        [SerializeField] private ApplianceGridObjectView m_applianceGridObjectView;
-        [SerializeField] private ProducerGridObjectView m_producerGridObjectViewPrefab;
+        [SerializeField] private BoxGridObjectView mBoxGridObjectView;
+        
         private Dictionary<string, int> _dict;
 
         private void Awake()
@@ -29,8 +30,8 @@ namespace _game.Scripts.Components.Grid.Objects
         }
 
 
-        public ApplianceGridObject SpawnApplianceGridObject(GridManager gridManager, int x, int y,
-            ApplianceGridObjectData data)
+        public BoxGridObject SpawnApplianceGridObject(GridManager gridManager, int x, int y,
+            BoxGridObjectData data)
         {
             var gridCell = gridManager.GetCell(x, y);
             if (gridCell.IsFilled()) return null;
@@ -45,24 +46,10 @@ namespace _game.Scripts.Components.Grid.Objects
                 _dict.Add(key, 0);
             }
             
-            var applianceGridObject = new ApplianceGridObject(gridManager, gridCell, m_applianceGridObjectView, data, _dict[key]);
+            var applianceGridObject = new BoxGridObject(gridManager, gridCell, mBoxGridObjectView, data, _dict[key]);
             gridCell.SetGridObject(applianceGridObject);
             
             return applianceGridObject;
-        }
-
-        public ProducerGridObject SpawnProducerGridObject(GridManager gridManager, int x, int y,
-            ProducerGridObjectData data)
-        {
-            // var gridCell = gridManager.GetCell(x, y);
-            // if (gridCell.IsFilled()) return null;
-            //
-            // var producerGridObject =
-            //     new ProducerGridObject(gridManager, gridCell, m_producerGridObjectViewPrefab, data);
-            // gridCell.SetGridObject(producerGridObject);
-            //
-            // GameEventManager.Instance.TriggerOnGridObjectAdded(producerGridObject);
-            return null;
         }
     }
 }

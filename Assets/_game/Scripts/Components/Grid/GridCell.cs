@@ -13,12 +13,10 @@ namespace _game.Scripts.Components.Grid
         [SerializeField, ReadOnly] private Vector2Int m_cord;
 
         private GridManager _gridManager;
-        private GridCellEvents _gridCellEvents;
         private IGridObject _gridObject;
 
         [Button]
-        public void Initialize(GridManager gridManager, Vector2Int cord, Vector2 localPosition,
-            GridCellEvents gridCellEvents)
+        public void Initialize(GridManager gridManager, Vector2Int cord, Vector2 localPosition)
         {
             name = GetIndex(cord.x, cord.y);
             m_rectTransform.anchoredPosition = localPosition;
@@ -26,7 +24,6 @@ namespace _game.Scripts.Components.Grid
             m_cord = cord;
 
             _gridManager = gridManager;
-            _gridCellEvents = gridCellEvents;
         }
 
         public static string GetIndex(int x, int y)
@@ -60,21 +57,9 @@ namespace _game.Scripts.Components.Grid
         {
             return _gridObject;
         }
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            _gridCellEvents.OnCellEnter?.Invoke(this);
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            _gridCellEvents.OnCellExit?.Invoke(this);
-        }
-
+        
         public void OnPointerClick(PointerEventData eventData)
         {
-            _gridCellEvents.OnCellClick?.Invoke(this, (int)eventData.button);
-
             if (_gridObject != null)
             {
                 _gridObject.OnInteract();
@@ -108,7 +93,7 @@ namespace _game.Scripts.Components.Grid
             else
             {
                 GridObjectSpawner.Instance.SpawnApplianceGridObject(_gridManager, m_cord.x, m_cord.y,
-                    ApplianceGridObjectData.GetRandomData());
+                    BoxGridObjectData.GetRandomData());
             }
         }
     }

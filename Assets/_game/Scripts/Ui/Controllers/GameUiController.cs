@@ -11,7 +11,7 @@ namespace _game.Scripts.Ui.Controllers
         public override void Show()
         {
             base.Show();
-            m_gridManager.SpawnGrid(_canvas);
+            m_gridManager.SpawnGrid();
         }
 
         public GridManager GetGridManager()

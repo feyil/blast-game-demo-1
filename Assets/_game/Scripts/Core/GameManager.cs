@@ -1,5 +1,4 @@
 using _game.Scripts.Components.Grid;
-using _game.Scripts.Components.Grid.Data;
 using _game.Scripts.Components.Grid.Objects;
 using _game.Scripts.Components.Grid.Objects.Data;
 using _game.Scripts.Core.Ui;
@@ -12,8 +11,6 @@ namespace _game.Scripts.Core
 {
     public class GameManager : MonoSingleton<GameManager>
     {
-        [SerializeField] private int m_startProducerCount;
-        [SerializeField] private GridSaveManager m_saveManager;
         [SerializeField] private Color m_twoColor;
         [SerializeField] private Color m_fourColor;
         [SerializeField] private Color m_eightColor;
@@ -60,7 +57,7 @@ namespace _game.Scripts.Core
                 for (var x = 0; x < dimensions.x; x++)
                 {
                     GridObjectSpawner.Instance.SpawnApplianceGridObject(gridManager, x, y,
-                        ApplianceGridObjectData.GetRandomData());
+                        BoxGridObjectData.GetRandomData());
                 }
             }
         }

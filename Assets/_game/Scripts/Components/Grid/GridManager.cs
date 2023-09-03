@@ -13,21 +13,14 @@ namespace _game.Scripts.Components.Grid
         [SerializeField] private GridCell m_gridCellPrefab;
 
         private Dictionary<string, GridCell> _currentGrid;
-        private Canvas _canvas;
 
         [Button]
-        public void SpawnGrid(Canvas canvas)
+        public void SpawnGrid()
         {
-            _canvas = canvas;
             CleanUp();
             SpawnGrid(m_container);
         }
-
-        public Canvas GetCanvas()
-        {
-            return _canvas;
-        }
-
+        
         private void SpawnGrid(RectTransform contentArea)
         {
             _currentGrid = new Dictionary<string, GridCell>();
@@ -49,12 +42,7 @@ namespace _game.Scripts.Components.Grid
                     var localPosition = new Vector2(currentColumn * cellWidth,
                         -currentRow * cellHeight);
 
-                    gridCell.Initialize(this, cord, localPosition, new GridCellEvents()
-                    {
-                        OnCellEnter = OnCellEnter,
-                        OnCellExit = OnCellExit,
-                        OnCellClick = OnCellClick
-                    });
+                    gridCell.Initialize(this, cord, localPosition);
 
                     var index = gridCell.GetIndex();
                     _currentGrid.Add(index, gridCell);
@@ -92,33 +80,7 @@ namespace _game.Scripts.Components.Grid
 
             _currentGrid = null;
         }
-
-        private void OnCellEnter(GridCell gridCell)
-        {
-        }
-
-        private void OnCellExit(GridCell gridCell)
-        {
-        }
-
-        private void OnCellClick(GridCell gridCell, int button)
-        {
-        }
-
-        public GridCell GetRandomEmptyCell()
-        {
-            var emptyCellList = new List<GridCell>();
-            foreach (var value in _currentGrid.Values)
-            {
-                if (!value.IsFilled())
-                {
-                    emptyCellList.Add(value);
-                }
-            }
-
-            return emptyCellList[Random.Range(0, emptyCellList.Count)];
-        }
-
+        
         public Dictionary<string, GridCell>.ValueCollection  GetAllCells()
         {
             return _currentGrid.Values;
