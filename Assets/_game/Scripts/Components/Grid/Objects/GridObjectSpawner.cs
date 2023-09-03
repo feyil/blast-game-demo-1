@@ -4,31 +4,35 @@ using _game.Scripts.Components.Grid.Objects.Data;
 using _game.Scripts.Components.Grid.Objects.View;
 using _game.Scripts.Utility;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _game.Scripts.Components.Grid.Objects
 {
     public class GridObjectSpawner : MonoSingleton<GridObjectSpawner>
     {
         [SerializeField] private BoxGridObjectView mBoxGridObjectView;
-        
-        private Dictionary<string, int> _dict;
+
+        private Dictionary<string, int> _offsetTrackerDict;
+        private WaitForEndOfFrame _waitForEndOfFrame;
 
         private void Awake()
         {
-            _dict = new Dictionary<string, int>();
-            StartCoroutine(Test());
+            _offsetTrackerDict = new Dictionary<string, int>();
+
+            _waitForEndOfFrame = new WaitForEndOfFrame();
+            StartCoroutine(OffsetCleanUpCoroutine());
         }
 
-        private IEnumerator Test()
+        private IEnumerator OffsetCleanUpCoroutine()
         {
             while (true)
             {
-                yield return new WaitForEndOfFrame();
-                _dict.Clear();
+                yield return _waitForEndOfFrame;
+                if (_offsetTrackerDict.Count != 0)
+                {
+                    _offsetTrackerDict.Clear();
+                }
             }
         }
-
 
         public BoxGridObject SpawnApplianceGridObject(GridManager gridManager, int x, int y,
             BoxGridObjectData data)
@@ -36,20 +40,28 @@ namespace _game.Scripts.Components.Grid.Objects
             var gridCell = gridManager.GetCell(x, y);
             if (gridCell.IsFilled()) return null;
 
+            var offset = TrackOffset(x, y);
+
+            var applianceGridObject =
+                new BoxGridObject(gridManager, gridCell, mBoxGridObjectView, data, offset);
+            gridCell.SetGridObject(applianceGridObject);
+
+            return applianceGridObject;
+        }
+
+        private int TrackOffset(int x, int y)
+        {
             var key = $"{x}_{y}";
-            if (_dict.ContainsKey(key))
+            if (_offsetTrackerDict.ContainsKey(key))
             {
-                _dict[key] += 1;
+                _offsetTrackerDict[key] += 1;
             }
             else
             {
-                _dict.Add(key, 0);
+                _offsetTrackerDict.Add(key, 0);
             }
-            
-            var applianceGridObject = new BoxGridObject(gridManager, gridCell, mBoxGridObjectView, data, _dict[key]);
-            gridCell.SetGridObject(applianceGridObject);
-            
-            return applianceGridObject;
+
+            return _offsetTrackerDict[key];
         }
     }
 }
