@@ -50,9 +50,8 @@ namespace _game.Scripts.Components.Grid.Objects
 
         public void SetPosition(Vector3 position)
         {
-            // if (_view == null) return;
             _view.transform.SetAsLastSibling();
-            _moveTween?.Complete();
+            _moveTween?.Kill();
             _moveTween = _view.transform.DOMove(position, 2000).SetSpeedBased();
         }
 
