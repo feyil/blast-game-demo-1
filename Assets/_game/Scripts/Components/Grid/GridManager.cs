@@ -91,6 +91,31 @@ namespace _game.Scripts.Components.Grid
         }
 
         [Button]
+        public void Shuffle()
+        {
+            var rowsCount = _gridConfig.NumberOfRows;
+            var columnCount = _gridConfig.NumberOfColumns;
+
+            for (var i = 0; i < rowsCount; i++)
+            {
+                for (var j = 0; j < columnCount; j++)
+                {
+                    int randomRow = Random.Range(0, rowsCount);
+                    int randomColumn = Random.Range(0, columnCount);
+
+                    var tempCell = GetCell(i, j);
+                    var tempObject = tempCell.GetGridObject();
+
+                    var randomCell = GetCell(randomRow, randomColumn);
+                    var randomObject = randomCell.GetGridObject();
+
+                    tempCell.SetGridObject(randomObject);
+                    randomCell.SetGridObject(tempObject);
+                }
+            }
+        }
+
+        [Button]
         public void CleanUp()
         {
             if (_currentGrid == null) return;
