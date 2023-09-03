@@ -1,3 +1,5 @@
+using _game.Scripts.Components.Grid.Objects;
+using _game.Scripts.Components.Grid.Objects.Data;
 using _game.Scripts.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -88,8 +90,14 @@ namespace _game.Scripts.Components.Grid
             _gridObject = newGridObject;
         }
 
+        public GridCell GetUpCell()
+        {
+            return _gridManager.GetCell(m_cord.x - 1, m_cord.y);
+        }
+
         public void OnDrag(PointerEventData eventData)
         {
+            return;
             if (_gridObject == null) return;
             var offset = GetSize() / 2;
 
@@ -103,6 +111,7 @@ namespace _game.Scripts.Components.Grid
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            return;
             if (_gridObject == null) return;
             _gridObject.SetPosition(transform.position);
 
@@ -151,6 +160,24 @@ namespace _game.Scripts.Components.Grid
                     GameEventManager.Instance.TriggerOnInventoryDrop(_gridObject);
                     break;
                 }
+            }
+        }
+
+        public void Fall(GridCell downCell)
+        {
+            if (downCell.GetGridObject() != null) return;
+            downCell.SetGridObject(_gridObject);
+            SetGridObject(null);
+
+            var upCell = GetUpCell();
+            if (upCell != null)
+            {
+                upCell.Fall(this);
+            }
+            else
+            {
+                GridObjectSpawner.Instance.SpawnApplianceGridObject(_gridManager, m_cord.x, m_cord.y,
+                    ApplianceGridObjectData.GetRandomData());
             }
         }
     }

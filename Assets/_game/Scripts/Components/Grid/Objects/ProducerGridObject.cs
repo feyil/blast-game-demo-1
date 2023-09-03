@@ -14,7 +14,7 @@ namespace _game.Scripts.Components.Grid.Objects
         private Coroutine _capacityCoroutine;
 
         public ProducerGridObject(GridManager gridManager, GridCell gridCell, ProducerGridObjectView viewPrefab,
-            ProducerGridObjectData data) : base(gridManager, gridCell, viewPrefab.gameObject)
+            ProducerGridObjectData data) : base(gridManager, gridCell, viewPrefab.gameObject, 0)
         {
             _data = data;
             _viewSpecific = _view.GetComponent<ProducerGridObjectView>();

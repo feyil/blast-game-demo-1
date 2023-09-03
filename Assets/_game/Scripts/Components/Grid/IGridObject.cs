@@ -12,5 +12,6 @@ namespace _game.Scripts.Components.Grid
         void OnInteract();
         void UpdateCell(GridCell gridCell);
         IItemData GetData();
+        bool IsDestroyed();
     }
 }

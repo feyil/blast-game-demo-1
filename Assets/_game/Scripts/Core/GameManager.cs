@@ -20,6 +20,12 @@ namespace _game.Scripts.Core
         [SerializeField] private GridSaveManager m_saveManager;
         [SerializeField] private TaskManager m_taskManager;
         [SerializeField] private InventoryManager m_inventoryManager;
+        [SerializeField] private Color m_twoColor;
+        [SerializeField] private Color m_fourColor;
+        [SerializeField] private Color m_eightColor;
+        [SerializeField] private Color m_sixteenColor;
+        [SerializeField] private Color m_thirtTwoColor;
+        [SerializeField] private Color m_sixyFourColor;
 
         private void Awake()
         {
@@ -48,29 +54,30 @@ namespace _game.Scripts.Core
             gameUiController.Show();
 
             var gridManager = gameUiController.GetGridManager();
-            
-            m_saveManager.Initialize(gridManager, "grid_json_data");
-            m_taskManager.Initialize(gridManager);
-            m_inventoryManager.Initialize();
 
-            var gameEventManager = GameEventManager.Instance;
-            gameEventManager.OnGridObjectAdded -= m_taskManager.OnGridObjectAdded;
-            gameEventManager.OnGridObjectAdded += m_taskManager.OnGridObjectAdded;
+            // m_saveManager.Initialize(gridManager, "grid_json_data");
+            // m_taskManager.Initialize(gridManager);
+            // m_inventoryManager.Initialize();
 
-            gameEventManager.OnGridObjectRemoved -= m_taskManager.OnGridObjectRemoved;
-            gameEventManager.OnGridObjectRemoved += m_taskManager.OnGridObjectRemoved;
+            // var gameEventManager = GameEventManager.Instance;
+            // gameEventManager.OnGridObjectAdded -= m_taskManager.OnGridObjectAdded;
+            // gameEventManager.OnGridObjectAdded += m_taskManager.OnGridObjectAdded;
 
-            gameEventManager.OnInventoryDrop -= m_inventoryManager.AddItem;
-            gameEventManager.OnInventoryDrop += m_inventoryManager.AddItem;
+            // gameEventManager.OnGridObjectRemoved -= m_taskManager.OnGridObjectRemoved;
+            // gameEventManager.OnGridObjectRemoved += m_taskManager.OnGridObjectRemoved;
 
-            m_taskManager.OnRefresh -= OnRefreshTaskView;
-            m_taskManager.OnRefresh += OnRefreshTaskView;
+            // gameEventManager.OnInventoryDrop -= m_inventoryManager.AddItem;
+            // gameEventManager.OnInventoryDrop += m_inventoryManager.AddItem;
 
-            var isLoaded = m_saveManager.LoadGrid();
-            if (!isLoaded)
-            {
-                InitializeGameGrid(gridManager);
-            }
+            // m_taskManager.OnRefresh -= OnRefreshTaskView;
+            // m_taskManager.OnRefresh += OnRefreshTaskView;
+
+            // var isLoaded = m_saveManager.LoadGrid();
+            // if (!isLoaded)
+            // {
+            //
+            // }
+            InitializeGameGrid(gridManager);
         }
 
         private void OnRefreshTaskView(List<GridTask> taskList)
@@ -81,14 +88,37 @@ namespace _game.Scripts.Core
 
         private void InitializeGameGrid(GridManager gridManager)
         {
-            for (var i = 0; i < m_startProducerCount; i++)
+            var dimensions = gridManager.GetDimensions();
+            
+            for (var y = 0; y < dimensions.y; y++)
             {
-                var spawnPoint = gridManager.GetRandomEmptyCell();
-                var spawnCord = spawnPoint.GetCord();
-
-                GridObjectSpawner.Instance.SpawnProducerGridObject(gridManager, spawnCord.x, spawnCord.y,
-                    ProducerGridObjectData.GetDefaultData());
+                for (var x = 0; x < dimensions.x; x++)
+                {
+                    GridObjectSpawner.Instance.SpawnApplianceGridObject(gridManager, x, y,
+                        ApplianceGridObjectData.GetRandomData());
+                }
             }
+        }
+
+        public Color GetColor(int number)
+        {
+            switch (number)
+            {
+                case 2:
+                    return m_twoColor;
+                case 4:
+                    return m_fourColor;
+                case 8:
+                    return m_eightColor;
+                case 16:
+                    return m_sixteenColor;
+                case 32:
+                    return m_thirtTwoColor;
+                case 64:
+                    return m_sixyFourColor;
+            }
+
+            return Color.black;
         }
     }
 }

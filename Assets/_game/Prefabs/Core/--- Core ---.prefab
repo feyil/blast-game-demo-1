@@ -228,6 +228,12 @@ MonoBehaviour:
   m_saveManager: {fileID: 1510746890}
   m_taskManager: {fileID: 1468377943}
   m_inventoryManager: {fileID: 44891816146370900}
+  m_twoColor: {r: 1, g: 0, b: 0, a: 1}
+  m_fourColor: {r: 0.034784317, g: 1, b: 0, a: 1}
+  m_eightColor: {r: 0, g: 0.089500904, b: 1, a: 1}
+  m_sixteenColor: {r: 0.9747987, g: 0, b: 1, a: 1}
+  m_thirtTwoColor: {r: 0.94648826, g: 1, b: 0, a: 1}
+  m_sixyFourColor: {r: 1, g: 0.61922556, b: 0, a: 1}
 --- !u!1 &3618466488900348169
 GameObject:
   m_ObjectHideFlags: 0

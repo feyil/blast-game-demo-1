@@ -36,8 +36,8 @@ namespace _game.Scripts.Components.Grid
             var cellWidth = size.x + m_spacing.x;
             var cellHeight = size.y + m_spacing.y;
 
-            var columnCount = m_dimension.x;
-            var rowCount = m_dimension.y;
+            var rowCount = m_dimension.x;
+            var columnCount = m_dimension.y;
 
             for (var currentRow = 0; currentRow < rowCount; currentRow++)
             {
@@ -72,6 +72,7 @@ namespace _game.Scripts.Components.Grid
             return m_objectContainer;
         }
 
+        [Button]
         public GridCell GetCell(int x, int y)
         {
             var index = GridCell.GetIndex(x, y);

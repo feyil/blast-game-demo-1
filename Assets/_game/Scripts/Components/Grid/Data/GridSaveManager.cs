@@ -99,7 +99,7 @@ namespace _game.Scripts.Components.Grid.Data
 
         private void OnApplicationQuit()
         {
-            SaveGrid();
+            // SaveGrid();
         }
     }
 }
