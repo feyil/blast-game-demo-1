@@ -1,10 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using _game.Scripts.Components.Grid.Objects.Data;
 using _game.Scripts.Components.Grid.Objects.View;
-using _game.Scripts.Core;
 using _game.Scripts.Utility;
 using UnityEngine;
 
@@ -48,11 +45,9 @@ namespace _game.Scripts.Components.Grid.Objects
                 _dict.Add(key, 0);
             }
             
-            Debug.Log(_dict[key]);
             var applianceGridObject = new ApplianceGridObject(gridManager, gridCell, m_applianceGridObjectView, data, _dict[key]);
             gridCell.SetGridObject(applianceGridObject);
             
-            GameEventManager.Instance.TriggerOnGridObjectAdded(applianceGridObject);
             return applianceGridObject;
         }
 

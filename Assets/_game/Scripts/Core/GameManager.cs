@@ -1,11 +1,7 @@
-using System.Collections.Generic;
 using _game.Scripts.Components.Grid;
 using _game.Scripts.Components.Grid.Data;
 using _game.Scripts.Components.Grid.Objects;
 using _game.Scripts.Components.Grid.Objects.Data;
-using _game.Scripts.Components.InventorySystem;
-using _game.Scripts.Components.TaskSystem;
-using _game.Scripts.Components.TaskSystem.Data;
 using _game.Scripts.Core.Ui;
 using _game.Scripts.Ui.Controllers;
 using _game.Scripts.Utility;
@@ -18,8 +14,6 @@ namespace _game.Scripts.Core
     {
         [SerializeField] private int m_startProducerCount;
         [SerializeField] private GridSaveManager m_saveManager;
-        [SerializeField] private TaskManager m_taskManager;
-        [SerializeField] private InventoryManager m_inventoryManager;
         [SerializeField] private Color m_twoColor;
         [SerializeField] private Color m_fourColor;
         [SerializeField] private Color m_eightColor;
@@ -54,38 +48,9 @@ namespace _game.Scripts.Core
             gameUiController.Show();
 
             var gridManager = gameUiController.GetGridManager();
-
-            // m_saveManager.Initialize(gridManager, "grid_json_data");
-            // m_taskManager.Initialize(gridManager);
-            // m_inventoryManager.Initialize();
-
-            // var gameEventManager = GameEventManager.Instance;
-            // gameEventManager.OnGridObjectAdded -= m_taskManager.OnGridObjectAdded;
-            // gameEventManager.OnGridObjectAdded += m_taskManager.OnGridObjectAdded;
-
-            // gameEventManager.OnGridObjectRemoved -= m_taskManager.OnGridObjectRemoved;
-            // gameEventManager.OnGridObjectRemoved += m_taskManager.OnGridObjectRemoved;
-
-            // gameEventManager.OnInventoryDrop -= m_inventoryManager.AddItem;
-            // gameEventManager.OnInventoryDrop += m_inventoryManager.AddItem;
-
-            // m_taskManager.OnRefresh -= OnRefreshTaskView;
-            // m_taskManager.OnRefresh += OnRefreshTaskView;
-
-            // var isLoaded = m_saveManager.LoadGrid();
-            // if (!isLoaded)
-            // {
-            //
-            // }
             InitializeGameGrid(gridManager);
         }
-
-        private void OnRefreshTaskView(List<GridTask> taskList)
-        {
-            var taskViewController = UiManager.Get<GameUiController>().GetTaskViewController();
-            taskViewController.Render(taskList);
-        }
-
+        
         private void InitializeGameGrid(GridManager gridManager)
         {
             var dimensions = gridManager.GetDimensions();

@@ -58,9 +58,8 @@ namespace _game.Scripts.Components.Grid.Objects
         public virtual void Destroy()
         {
             _isDestroyed = true;
-            GameEventManager.Instance.TriggerOnGridObjectRemoved(this);
             _gridCell.SetGridObject(null);
-            // UpdateCell(null);
+            
             Object.Destroy(_view);
         }
     }

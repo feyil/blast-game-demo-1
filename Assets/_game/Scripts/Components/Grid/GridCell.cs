@@ -7,8 +7,7 @@ using UnityEngine.EventSystems;
 
 namespace _game.Scripts.Components.Grid
 {
-    public class GridCell : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler,
-        IDragHandler, IEndDragHandler
+    public class GridCell : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] private RectTransform m_rectTransform;
         [SerializeField, ReadOnly] private Vector2Int m_cord;
@@ -94,75 +93,7 @@ namespace _game.Scripts.Components.Grid
         {
             return _gridManager.GetCell(m_cord.x - 1, m_cord.y);
         }
-
-        public void OnDrag(PointerEventData eventData)
-        {
-            return;
-            if (_gridObject == null) return;
-            var offset = GetSize() / 2;
-
-            var canvas = _gridManager.GetCanvas();
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform,
-                eventData.position, canvas.worldCamera, out Vector2 localPos);
-            var position = canvas.transform.TransformPoint(localPos + new Vector2(-offset.x, offset.y));
-
-            _gridObject.SetPosition(position);
-        }
-
-        public void OnEndDrag(PointerEventData eventData)
-        {
-            return;
-            if (_gridObject == null) return;
-            _gridObject.SetPosition(transform.position);
-
-            var hoveredList = eventData.hovered;
-            foreach (var hovered in hoveredList)
-            {
-                if (hovered == gameObject) continue;
-
-                var hoveredName = hovered.name;
-
-                // TODO can be implemented with layers or tags to be more robust
-                if (hoveredName.Contains("x_"))
-                {
-                    var targetGridCell = hovered.GetComponent<GridCell>();
-                    if (!targetGridCell.IsFilled())
-                    {
-                        // Move
-                        targetGridCell.SetGridObject(_gridObject);
-                        SetGridObject(null);
-                    }
-                    else
-                    {
-                        var targetGridObject = targetGridCell.GetGridObject();
-                        if (targetGridObject.CanMerge(_gridObject))
-                        {
-                            // Merge
-                            var isSuccess = targetGridObject.Merge(_gridObject);
-                            if (isSuccess)
-                            {
-                                SetGridObject(null);
-                            }
-                        }
-                        else
-                        {
-                            // Switch
-                            targetGridCell.SetGridObject(_gridObject);
-                            SetGridObject(targetGridObject);
-                        }
-                    }
-
-                    break;
-                }
-
-                if (hoveredName.Contains("btn_inventory"))
-                {
-                    GameEventManager.Instance.TriggerOnInventoryDrop(_gridObject);
-                    break;
-                }
-            }
-        }
-
+        
         public void Fall(GridCell downCell)
         {
             if (downCell.GetGridObject() != null) return;
