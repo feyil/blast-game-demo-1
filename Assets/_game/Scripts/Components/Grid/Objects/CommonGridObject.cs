@@ -18,11 +18,8 @@ namespace _game.Scripts.Components.Grid.Objects
             _gridCell = gridCell;
 
             _view = Object.Instantiate(viewPrefab, gridManager.GetObjectContainer());
+            _view.transform.position = GetSpawnPosition(_gridCell, offset);
 
-            var cord = _gridCell.GetCord();
-            var cell = _gridManager.GetCell(0, cord.y);
-            _view.transform.position = cell.transform.position + Vector3.up * 100 + (7 - cord.x) * Vector3.up * 150 +
-                                       offset * Vector3.up * 150;
             _view.GetComponent<RectTransform>().sizeDelta = gridCell.GetSize();
         }
 
@@ -33,6 +30,21 @@ namespace _game.Scripts.Components.Grid.Objects
         public void UpdateCell(GridCell gridCell)
         {
             _gridCell = gridCell;
+        }
+
+        private Vector3 GetSpawnPosition(GridCell gridCell, int offset)
+        {
+            var cord = gridCell.GetCord();
+            var topMostCell = _gridManager.GetCell(0, cord.y);
+            var topMostCellPosition = topMostCell.GetPosition();
+
+            //TODO embed to the gridConfig data structure
+            var defaultOffset = Vector3.up * 100;
+            var cordOffset = (7 - cord.x) * Vector3.up * 150;
+            var externalOffset = offset * Vector3.up * 150;
+
+            var startPosition = topMostCellPosition + defaultOffset + cordOffset + externalOffset;
+            return startPosition;
         }
 
         public void SetPosition(Vector3 position)

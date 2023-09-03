@@ -96,5 +96,10 @@ namespace _game.Scripts.Components.Grid
                     BoxGridObjectData.GetRandomData());
             }
         }
+
+        public Vector3 GetPosition()
+        {
+            return transform.position;
+        }
     }
 }
