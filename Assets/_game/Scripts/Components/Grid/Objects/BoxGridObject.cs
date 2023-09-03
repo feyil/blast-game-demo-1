@@ -27,94 +27,62 @@ namespace _game.Scripts.Components.Grid.Objects
             return _data;
         }
 
-        public override bool CanMerge(IGridObject gridObject)
-        {
-            if (gridObject is not BoxGridObject applianceGridObject) return false;
-
-            return applianceGridObject._data.Number == _data.Number;
-        }
-
-        public override bool Merge(IGridObject gridObject)
-        {
-            var applianceGridObject = gridObject as BoxGridObject;
-            if (applianceGridObject == null) return false;
-
-            var gridObjectNumber = applianceGridObject._data.Number;
-            if (gridObjectNumber == BoxGridObjectData.MAX_VALUE) return false;
-
-            var cord = _gridCell.GetCord();
-            gridObject.Destroy();
-            Destroy();
-
-            GridObjectSpawner.Instance.SpawnApplianceGridObject(_gridManager, cord.x, cord.y,
-                new BoxGridObjectData()
-                {
-                    Number = _data.Number * 2
-                });
-
-            return true;
-        }
-
         public override void OnInteract()
         {
-            var affectedCellList = new HashSet<BoxGridObject>();
-            CheckNeighbouringCells(affectedCellList);
-            if (affectedCellList.Count < 2) return;
+            var affectedGridObjectSet = new HashSet<BoxGridObject>();
+            CheckNeighbouringCells(affectedGridObjectSet);
 
-            foreach (var affectedCell in affectedCellList)
+            if (affectedGridObjectSet.Count < 2) return;
+
+            foreach (var affectedGridObject in affectedGridObjectSet)
             {
-                affectedCell.Destroy();
-                
-                var upCell = affectedCell._gridCell.GetUpCell();
+                affectedGridObject.Destroy();
+
+                var affectedGridCell = affectedGridObject._gridCell;
+                var upCell = affectedGridCell.GetUpCell();
+
+                // Top of the board
                 if (upCell == null)
                 {
-                    var cord = affectedCell._gridCell.GetCord();
-                    GridObjectSpawner.Instance.SpawnApplianceGridObject(_gridManager, cord.x, cord.y,
+                    var topCord = affectedGridCell.GetCord();
+                    GridObjectSpawner.Instance.SpawnApplianceGridObject(_gridManager, topCord.x, topCord.y,
                         BoxGridObjectData.GetRandomData());
                     continue;
                 }
-                upCell.Fall(affectedCell._gridCell);
+
+                upCell.Fall(affectedGridCell);
             }
         }
 
-        private void CheckNeighbouringCells(HashSet<BoxGridObject> affectedCellList)
+        private void CheckNeighbouringCells(HashSet<BoxGridObject> affectedGridObjectSet)
         {
             var cord = _gridCell.GetCord();
             for (var i = -1; i <= 1; i += 2)
             {
-                var gridCell = _gridManager.GetCell(cord.x, cord.y + i);
-                if (gridCell == null) continue;
-
-                var gridObject = gridCell.GetGridObject();
-                if (gridObject == null) continue;
-
-                var applianceGridObject = gridObject as BoxGridObject;
-                if (applianceGridObject == null) continue;
-                if (applianceGridObject.GetNumber() == GetNumber())
-                {
-                    if(affectedCellList.Contains(applianceGridObject)) continue;
-                    affectedCellList.Add(applianceGridObject);
-                    applianceGridObject.CheckNeighbouringCells(affectedCellList);
-                }
+                CheckNeighboringCell(cord.x, cord.y + i, affectedGridObjectSet);
             }
-            
-            
+
             for (var i = -1; i <= 1; i += 2)
             {
-                var gridCell = _gridManager.GetCell(cord.x + i, cord.y);
-                if (gridCell == null) continue;
+                CheckNeighboringCell(cord.x + i, cord.y, affectedGridObjectSet);
+            }
+        }
 
-                var gridObject = gridCell.GetGridObject();
-                if (gridObject == null) continue;
+        private void CheckNeighboringCell(int x, int y, HashSet<BoxGridObject> affectedGridObjectSet)
+        {
+            var gridCell = _gridManager.GetCell(x, y);
+            if (gridCell == null) return;
 
-                var applianceGridObject = gridObject as BoxGridObject;
-                if (applianceGridObject == null) continue;
-                if (applianceGridObject.GetNumber() == GetNumber())
-                {
-                    if(affectedCellList.Contains(applianceGridObject)) continue;
-                    affectedCellList.Add(applianceGridObject);
-                    applianceGridObject.CheckNeighbouringCells(affectedCellList);
-                }
+            var gridObject = gridCell.GetGridObject();
+            if (gridObject == null) return;
+
+            var applianceGridObject = gridObject as BoxGridObject;
+            if (applianceGridObject == null) return;
+            if (applianceGridObject.GetNumber() == GetNumber())
+            {
+                if (affectedGridObjectSet.Contains(applianceGridObject)) return;
+                affectedGridObjectSet.Add(applianceGridObject);
+                applianceGridObject.CheckNeighbouringCells(affectedGridObjectSet);
             }
         }
 

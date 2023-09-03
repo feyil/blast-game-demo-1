@@ -27,9 +27,6 @@ namespace _game.Scripts.Components.Grid.Objects
         }
 
         public abstract IItemData GetData();
-        
-        public abstract bool CanMerge(IGridObject gridObject);
-        public abstract bool Merge(IGridObject gridObject);
 
         public abstract void OnInteract();
 
