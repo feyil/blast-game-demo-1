@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using _game.Scripts.Components.Grid.Data;
 using _game.Scripts.Core;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -8,23 +10,26 @@ namespace _game.Scripts.Components.Grid.Objects.Data
     [Serializable]
     public class BoxGridObjectData : IItemData
     {
-        public static int MIN_VALUE = 2;
-        public static int MAX_VALUE = 8;
-
         public int Number;
+        public Sprite Icon;
         public Color Color = new(1, 0.504717f, 0.504717f);
 
-        public static BoxGridObjectData GetRandomData()
+        public static BoxGridObjectData GetRandomData(GridConfig gridConfig)
         {
+            var min = 0;
+            var max = gridConfig.NumberOfColors;
+            var boxConfigArray = gridConfig.BoxConfigArray;
+
+            var index = Random.Range(min, max);
+            var boxConfig = boxConfigArray[Mathf.Clamp(index, min, max)];
+
             var data = new BoxGridObjectData()
             {
-                Number = (int)Mathf.Pow(MIN_VALUE, Random.Range(1, (int)Mathf.Log(MAX_VALUE, 2) + 1)),
+                Number = index,
+                Color = boxConfig.DefaultColor
             };
 
-            var color = GameManager.Instance.GetColor(data.Number);
-            data.Color = color;
             return data;
         }
-        
     }
 }

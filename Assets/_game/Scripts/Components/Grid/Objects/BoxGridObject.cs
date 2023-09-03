@@ -32,7 +32,8 @@ namespace _game.Scripts.Components.Grid.Objects
             var affectedGridObjectSet = new HashSet<BoxGridObject>();
             CheckNeighbouringCells(affectedGridObjectSet);
 
-            if (affectedGridObjectSet.Count < 2) return;
+            affectedGridObjectSet.Add(this);
+            if (affectedGridObjectSet.Count < _gridManager.GetBlastableGroupCount()) return;
 
             foreach (var affectedGridObject in affectedGridObjectSet)
             {
@@ -45,8 +46,7 @@ namespace _game.Scripts.Components.Grid.Objects
                 if (upCell == null)
                 {
                     var topCord = affectedGridCell.GetCord();
-                    GridObjectSpawner.Instance.SpawnApplianceGridObject(_gridManager, topCord.x, topCord.y,
-                        BoxGridObjectData.GetRandomData());
+                    GridObjectSpawner.Instance.SpawnBoxGridObject(_gridManager, topCord.x, topCord.y);
                     continue;
                 }
 
@@ -76,13 +76,13 @@ namespace _game.Scripts.Components.Grid.Objects
             var gridObject = gridCell.GetGridObject();
             if (gridObject == null) return;
 
-            var applianceGridObject = gridObject as BoxGridObject;
-            if (applianceGridObject == null) return;
-            if (applianceGridObject.GetNumber() == GetNumber())
+            var boxGridObject = gridObject as BoxGridObject;
+            if (boxGridObject == null) return;
+            if (boxGridObject.GetNumber() == GetNumber())
             {
-                if (affectedGridObjectSet.Contains(applianceGridObject)) return;
-                affectedGridObjectSet.Add(applianceGridObject);
-                applianceGridObject.CheckNeighbouringCells(affectedGridObjectSet);
+                if (affectedGridObjectSet.Contains(boxGridObject)) return;
+                affectedGridObjectSet.Add(boxGridObject);
+                boxGridObject.CheckNeighbouringCells(affectedGridObjectSet);
             }
         }
 

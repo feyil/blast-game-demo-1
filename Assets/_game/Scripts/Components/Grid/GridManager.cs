@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using _game.Scripts.Components.Grid.Data;
+using _game.Scripts.Components.Grid.Objects;
+using _game.Scripts.Components.Grid.Objects.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -8,29 +11,34 @@ namespace _game.Scripts.Components.Grid
     {
         [SerializeField] private RectTransform m_container;
         [SerializeField] private RectTransform m_objectContainer;
-        [SerializeField] private Vector2Int m_dimension;
-        [SerializeField] private Vector2 m_spacing;
         [SerializeField] private GridCell m_gridCellPrefab;
 
         private Dictionary<string, GridCell> _currentGrid;
+        private GridConfig _gridConfig;
 
         [Button]
-        public void SpawnGrid()
+        public void SpawnGrid(GridConfig gridConfig, GridObjectSpawner gridObjectSpawner)
         {
+            _gridConfig = gridConfig;
+
             CleanUp();
             SpawnGrid(m_container);
+
+            gridObjectSpawner.Initialize(_gridConfig);
+
+            InitializeGameGrid();
         }
-        
+
         private void SpawnGrid(RectTransform contentArea)
         {
             _currentGrid = new Dictionary<string, GridCell>();
 
             var size = m_gridCellPrefab.GetSize();
-            var cellWidth = size.x + m_spacing.x;
-            var cellHeight = size.y + m_spacing.y;
+            var cellWidth = size.x + _gridConfig.Spacing.x;
+            var cellHeight = size.y + _gridConfig.Spacing.y;
 
-            var rowCount = m_dimension.x;
-            var columnCount = m_dimension.y;
+            var rowCount = _gridConfig.NumberOfRows;
+            var columnCount = _gridConfig.NumberOfColumns;
 
             for (var currentRow = 0; currentRow < rowCount; currentRow++)
             {
@@ -50,9 +58,23 @@ namespace _game.Scripts.Components.Grid
             }
         }
 
+        private void InitializeGameGrid()
+        {
+            var rowCount = _gridConfig.NumberOfRows;
+            var columnCount = _gridConfig.NumberOfColumns;
+
+            for (var y = 0; y < columnCount; y++)
+            {
+                for (var x = 0; x < rowCount; x++)
+                {
+                    GridObjectSpawner.Instance.SpawnBoxGridObject(this, x, y);
+                }
+            }
+        }
+
         public Vector2Int GetDimensions()
         {
-            return m_dimension;
+            return new Vector2Int(_gridConfig.NumberOfRows, _gridConfig.NumberOfColumns);
         }
 
         public RectTransform GetObjectContainer()
@@ -74,16 +96,26 @@ namespace _game.Scripts.Components.Grid
             if (_currentGrid == null) return;
             foreach (var value in _currentGrid.Values)
             {
-                if (Application.isPlaying) Destroy(value.gameObject);
-                else DestroyImmediate(value.gameObject);
+                var gridObject = value.GetGridObject();
+                if (gridObject != null)
+                {
+                    gridObject.Destroy();
+                }
+
+                Destroy(value.gameObject);
             }
 
             _currentGrid = null;
         }
-        
-        public Dictionary<string, GridCell>.ValueCollection  GetAllCells()
+
+        public Dictionary<string, GridCell>.ValueCollection GetAllCells()
         {
             return _currentGrid.Values;
+        }
+
+        public int GetBlastableGroupCount()
+        {
+            return _gridConfig.BlastableGroupCount;
         }
     }
 }

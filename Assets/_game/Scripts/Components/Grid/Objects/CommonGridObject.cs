@@ -37,11 +37,11 @@ namespace _game.Scripts.Components.Grid.Objects
             var cord = gridCell.GetCord();
             var topMostCell = _gridManager.GetCell(0, cord.y);
             var topMostCellPosition = topMostCell.GetPosition();
-
-            //TODO embed to the gridConfig data structure
+            
+            //TODO can be moved to GridConfig
             var defaultOffset = Vector3.up * 100;
-            var cordOffset = (7 - cord.x) * Vector3.up * 150;
-            var externalOffset = offset * Vector3.up * 150;
+            var cordOffset = (_gridManager.GetDimensions().x - cord.x) * Vector3.up * 100;
+            var externalOffset = offset * Vector3.up * 100;
 
             var startPosition = topMostCellPosition + defaultOffset + cordOffset + externalOffset;
             return startPosition;

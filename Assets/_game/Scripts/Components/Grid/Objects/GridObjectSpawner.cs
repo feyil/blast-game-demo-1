@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using _game.Scripts.Components.Grid.Data;
 using _game.Scripts.Components.Grid.Objects.Data;
 using _game.Scripts.Components.Grid.Objects.View;
 using _game.Scripts.Utility;
@@ -9,13 +10,16 @@ namespace _game.Scripts.Components.Grid.Objects
 {
     public class GridObjectSpawner : MonoSingleton<GridObjectSpawner>
     {
-        [SerializeField] private BoxGridObjectView mBoxGridObjectView;
+        [SerializeField] private BoxGridObjectView m_boxGridObjectView;
 
         private Dictionary<string, int> _offsetTrackerDict;
         private WaitForEndOfFrame _waitForEndOfFrame;
 
-        private void Awake()
+        private GridConfig _gridConfig;
+
+        public void Initialize(GridConfig gridConfig)
         {
+            _gridConfig = gridConfig;
             _offsetTrackerDict = new Dictionary<string, int>();
 
             _waitForEndOfFrame = new WaitForEndOfFrame();
@@ -34,19 +38,19 @@ namespace _game.Scripts.Components.Grid.Objects
             }
         }
 
-        public BoxGridObject SpawnApplianceGridObject(GridManager gridManager, int x, int y,
-            BoxGridObjectData data)
+        public BoxGridObject SpawnBoxGridObject(GridManager gridManager, int x, int y)
         {
             var gridCell = gridManager.GetCell(x, y);
             if (gridCell.IsFilled()) return null;
 
             var offset = TrackOffset(x, y);
 
-            var applianceGridObject =
-                new BoxGridObject(gridManager, gridCell, mBoxGridObjectView, data, offset);
-            gridCell.SetGridObject(applianceGridObject);
+            var data = BoxGridObjectData.GetRandomData(_gridConfig);
+            var boxGridObject =
+                new BoxGridObject(gridManager, gridCell, m_boxGridObjectView, data, offset);
+            gridCell.SetGridObject(boxGridObject);
 
-            return applianceGridObject;
+            return boxGridObject;
         }
 
         private int TrackOffset(int x, int y)

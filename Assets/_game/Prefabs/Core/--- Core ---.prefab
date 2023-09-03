@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f37506573b0b41e5b31ca705d4048c05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mBoxGridObjectView: {fileID: 4919985916404130247, guid: 3d630269c067b4a02b1e17dfdb4aa102,
+  m_boxGridObjectView: {fileID: 4919985916404130247, guid: 3d630269c067b4a02b1e17dfdb4aa102,
     type: 3}
 --- !u!1 &2088114231
 GameObject:
@@ -90,6 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae19a1c5611e2413fb188e58a075403f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_gridConfigSo: {fileID: 11400000, guid: 11beeabce8956404e90e83da0c59084a, type: 2}
   m_twoColor: {r: 1, g: 0, b: 0, a: 1}
   m_fourColor: {r: 0.034784317, g: 1, b: 0, a: 1}
   m_eightColor: {r: 0, g: 0.089500904, b: 1, a: 1}

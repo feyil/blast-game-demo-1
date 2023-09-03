@@ -1,6 +1,4 @@
 using _game.Scripts.Components.Grid.Objects;
-using _game.Scripts.Components.Grid.Objects.Data;
-using _game.Scripts.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -30,8 +28,7 @@ namespace _game.Scripts.Components.Grid
         {
             return $"x_{x}_y_{y}";
         }
-
-        [Button]
+        
         public Vector2 GetSize()
         {
             var rect = m_rectTransform.rect;
@@ -92,8 +89,8 @@ namespace _game.Scripts.Components.Grid
             }
             else
             {
-                GridObjectSpawner.Instance.SpawnApplianceGridObject(_gridManager, m_cord.x, m_cord.y,
-                    BoxGridObjectData.GetRandomData());
+                // Top of the board
+                GridObjectSpawner.Instance.SpawnBoxGridObject(_gridManager, m_cord.x, m_cord.y);
             }
         }
 
